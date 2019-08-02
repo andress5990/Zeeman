@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import os
 import sys
 
 from statistics import mean, stdev
@@ -31,22 +30,27 @@ def Analisys1(data_list):#funcion de analisis
 
     count = 0#Coun lleva la cuenta, define el tiempo para la selección de datos
     window = 4#el window es la magntud del step para calcular el delta
+    
     for counter in range(len(data_list)):
-        if(counter < window):#Condiciona a haber pasado 
+        if(counter < window):#Condiciona a empezar cuando se tenga una cantidad de datos igual al window
             pass
         if(counter >= (window+1) and counter <= len(data_list)):
-            delta = CalDelta(data_list[counter - window], data_list[counter])
-            delta_list.append(delta)
-            [mean_delta, std_delta] = Stads(delta_list)
+            #inicia al llevar la cantidad de valores del window, y que termine si se llega al final del array
+            delta = CalDelta(data_list[counter - window], data_list[counter])#calcula el delta con un intervalo de valores igual al window
+            delta_list.append(delta)#agregamos el delta a delta_list, que es temporal
+            [mean_delta, std_delta] = Stads(delta_list)#calculamos del mean, y sdt con los elementos del delta_list
             
             if delta > std_delta or delta < -1*std_delta:
+                #si el valor de delta se aleja de mean por mas de una std a la derecha o a la izquierda, se excluye
                 pass
             if delta <= std_delta or delta >= -1*std_delta:
+                #si el valor esta a menos de una std se incluye en f_data (final data)
+                #ademas el count se se agrega a la lista time, (una medición por segundo) 
                 time.append(count)
                 f_data.append(delta)
-                count +=1
+                count +=1#se suma uno a la cuenta
                 
-                return [time,f_data, mean_delta, std_delta]
+                return [time,f_data, mean_delta, std_delta]#se devuelven las listas time, f_data, y los valores mean y std
 
 
 
