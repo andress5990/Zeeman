@@ -3,54 +3,65 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import sys
 
-from statistics import mean, stdev
 
 import pdb
 
-def CalDelta(vi, vf):
+def CalDelta(vf, vi):
     
-    delta = vi-vf
-    if delta >= 0:
-        return delta
+    delta = vf-vi
+    return delta
     
     #if delta <= 0:
     #    return ('nv', Deltas)
 
-def Stads(window_list):#funcion de calculo de delta
+def Stads(Data_list):#funcion de calculo de delta
 
-    mean_data = mean(window_list)
-    std_data = stdev(window_list)
+    mean_data = 0
+    std_data = 0
+    
+    for data in Data_list:
+        data += data
+        mean_data = data
+    
+    mean_data = mean_data/len(Data_list) 
+    
+    std_term = 0
+    for data in Data_list:
+        std_term = (data-mean_data)**2
+        std_data += std_term
+    
+    std_data = std_data/(len(Data_list)-1)
+    std_data = (std_data)**(1/2)
 
     return [mean_data, std_data]
 
-def Analisys1(data_list):#funcion de analisis
-    delta_list = []#Esta lista acumula temporalemente los datos de frecuencia para calcular la ds
-    f_data = []#son los datos dinales de frecuencia
-    time = []#Acumula el dato de tiempo
+def Analisys1(data_list):
+    tdelta_list = []
+    f_data = []
+    time = []
 
-    count = 0#Coun lleva la cuenta, define el tiempo para la selección de datos
-    window = 4#el window es la magntud del step para calcular el delta
+    count = 0
+    window = 2
     
     for counter in range(len(data_list)):
-        if(counter < window):#Condiciona a empezar cuando se tenga una cantidad de datos igual al window
+        if(counter < window):
             pass
-        if(counter >= (window+1) and counter <= len(data_list)):
-            #inicia al llevar la cantidad de valores del window, y que termine si se llega al final del array
-            delta = CalDelta(data_list[counter - window], data_list[counter])#calcula el delta con un intervalo de valores igual al window
-            delta_list.append(delta)#agregamos el delta a delta_list, que es temporal
-            [mean_delta, std_delta] = Stads(delta_list)#calculamos del mean, y sdt con los elementos del delta_list
+        if(counter >= (window) and counter <= len(data_list)):
+            delta = CalDelta(data_list[counter], data_list[counter-window])
+            tdelta_list.append(delta)
+    
+    [mean_delta, std_delta] = Stads(tdelta_list)
             
-            if delta > std_delta or delta < -1*std_delta:
-                #si el valor de delta se aleja de mean por mas de una std a la derecha o a la izquierda, se excluye
-                pass
-            if delta <= std_delta or delta >= -1*std_delta:
-                #si el valor esta a menos de una std se incluye en f_data (final data)
-                #ademas el count se se agrega a la lista time, (una medición por segundo) 
-                time.append(count)
-                f_data.append(delta)
-                count +=1#se suma uno a la cuenta
+    for delta in tdelta_list:
+        if delta > std_delta or delta < -1*std_delta:
+            pass
+        
+        if delta <= std_delta or delta >= -1*std_delta:
+            time.append(count)
+            f_data.append(delta)
+            count +=1
                 
-                return [time,f_data, mean_delta, std_delta]#se devuelven las listas time, f_data, y los valores mean y std
+    return [time,f_data, mean_delta, std_delta]
 
 
 
@@ -92,7 +103,7 @@ for df in range(len(probe)):
         t_Z_OFF_F.append(df3[0][data])
         f_Z_OFF_F.append(df3[1][data])
 
-
+[time,f_data, mean_delta, std_delta] = Analisys1(f_Z_OFF_I)
 
 
 
