@@ -7,10 +7,10 @@ import sys
 import pdb
 
 def CalDelta(vf, vi):
-    
+
     delta = vf-vi
     return delta
-    
+
     #if delta <= 0:
     #    return ('nv', Deltas)
 
@@ -18,18 +18,18 @@ def Stads(Data_list):#funcion de calculo de delta
 
     mean_data = 0
     std_data = 0
-    
+
     for data in Data_list:
         data += data
         mean_data = data
-    
-    mean_data = mean_data/len(Data_list) 
-    
+
+    mean_data = mean_data/len(Data_list)
+
     std_term = 0
     for data in Data_list:
         std_term = (data-mean_data)**2
         std_data += std_term
-    
+
     std_data = std_data/(len(Data_list)-1)
     std_data = (std_data)**(1/2)
 
@@ -42,25 +42,25 @@ def Analisys1(data_list):
 
     count = 0
     window = 2
-    
+
     for counter in range(len(data_list)):
         if(counter < window):
             pass
         if(counter >= (window) and counter <= len(data_list)):
             delta = CalDelta(data_list[counter], data_list[counter-window])
             tdelta_list.append(delta)
-    
+
     [mean_delta, std_delta] = Stads(tdelta_list)
             
     for delta in tdelta_list:
         if delta > std_delta or delta < -1*std_delta:
             pass
-        
+
         if delta <= std_delta or delta >= -1*std_delta:
             time.append(count)
             f_data.append(delta)
             count +=1
-                
+
     return [time,f_data, mean_delta, std_delta]
 
 
@@ -105,6 +105,15 @@ for df in range(len(probe)):
 
 [time,f_data, mean_delta, std_delta] = Analisys1(f_Z_OFF_I)
 
+fig = plt.figure()
+ax1 = fig.add_subplot(111)
+ax1.set_ylim(min(f_data), max(f_data))
+ax1.set_xlim(min(time), max(time))
+ax1.set_xlabel('time(s)', fontsize=6)
+ax1.set_xlabel('Delta Frequency (Hz)', fontsize=6)
+
+plt.xticks(np.arange(min(time), max(time), step=5), fontsize=8)
+plt.yticks(np.arange(min(f_data), min(f_data), step=0.15), fontsize=8)
 
 
 pdb.set_trace()
