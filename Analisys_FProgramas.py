@@ -14,7 +14,6 @@ def CalDelta(vf, vi):
     #if delta <= 0:
     #    return ('nv', Deltas)
 
-def Stads(Data_list):#funcion de calculo de delta
 
     mean_data = 0
     std_data = 0
