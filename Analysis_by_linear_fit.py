@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import sys
 import statistics as st
+import matplotlib.transforms as mtransforms
 
 from scipy import stats
 
@@ -143,7 +144,8 @@ plt.xticks(np.arange(0, len(f_Z_OFF_I), step=20), fontsize=8)
 plt.yticks(np.arange(min(f_Z_OFF_I), max(f_Z_OFF_I) + 0.2, step=0.1), fontsize=8)
 ax1.set_xlabel("time(s)", fontsize=6)
 ax1.set_ylabel("Frequency (Hz)", fontsize=6)
-ax1.set_title('Analisys of frequency')
+ax1.set_title('Frequency analisys of ' + str(sys.argv[1]) + ' DSfactor: ' 
+              + str(selection_factor) + ' step: ' + str(step))
 ax1.grid()
 
 c11 = ax1.plot(np.arange(0, len(f_Z_OFF_I)), f_Z_OFF_I, label= 'Data')#graficamos los datos brutos
@@ -169,7 +171,8 @@ plt.xticks(np.arange(0, len(f_selection), step=20), fontsize=8)
 plt.yticks(np.arange(min(f_selection), max(f_selection) + 0.2, step=0.1), fontsize=8)
 ax2.set_xlabel("time(s)", fontsize=6)
 ax2.set_ylabel("Frequency (Hz)", fontsize=6)
-ax2.set_title('Analisys')
+ax2.set_title('Selected data of ' + str(sys.argv[1]) + ' SDfactor: ' + str(selection_factor)
+               + ' step: ' + str(step))
 ax2.grid()
 
 c21 = ax2.plot(t_selection, f_selection, label='Data selected')
